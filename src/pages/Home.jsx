@@ -9,8 +9,10 @@ import axios from "axios";
 const URL = "https://api.github.com/users/";
 
 const Home = () => {
+  const [layout, setLayout] = useState(() => {
+    return localStorage.getItem("layout") || "horizontal";
+  });
   const [open, setOpen] = useState(false);
-  const [layout, setLayout] = useState("horizontal");
 
   const [username, setUsername] = useState("");
   const [user, setUser] = useState(null);
@@ -36,6 +38,10 @@ const Home = () => {
     fetchUserAndRepos();
   }, [username]);
 
+  useEffect(() => {
+    localStorage.setItem("layout", layout);
+  }, [layout]);
+
   return (
     <>
       <Header
@@ -50,7 +56,7 @@ const Home = () => {
         <section
           className={`w-full grid gap-6 items-start ${
             layout === "horizontal"
-              ? "md:grid-cols-[320px_1fr]"
+              ? "md:grid-cols-[280px_1fr]"
               : "md:grid-cols-1"
           }`}
         >
