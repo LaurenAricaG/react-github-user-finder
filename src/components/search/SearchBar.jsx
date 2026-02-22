@@ -11,7 +11,7 @@ const SearchBar = ({ onSearch }) => {
     onSearch(value.trim());
   };
   return (
-    <div className="w-full max-w-2xl mb-12 text-center hidden">
+    <div className="w-full max-w-2xl mb-12 text-center">
       <h1 className="text-xl md:text-4xl font-bold mb-5 tracking-tight text-slate-800 dark:text-slate-100">
         Encuentra a tu proximo colaborador
       </h1>
@@ -24,7 +24,7 @@ const SearchBar = ({ onSearch }) => {
             value={value}
             onChange={(e) => setValue(e.target.value)}
             type="text"
-            placeholder="Ingresa el usuario de github"
+            placeholder="laurenaricag"
             className=" w-full h-12 pl-12 pr-6 rounded-xl bg-gray-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 text-sm sm:text-base text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-blue-500/70 dark:focus:ring-1 dark:focus:ring-blue-500/70 transition"
           />
         </form>
