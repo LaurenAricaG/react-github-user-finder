@@ -90,7 +90,12 @@ const Home = () => {
             }`}
           >
             <ProfileSkeleton />
-            <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
+
+            <div
+              className={`grid gap-3 grid-cols-1 ${
+                layout === "horizontal" ? "sm:grid-cols-2" : "sm:grid-cols-3"
+              }`}
+            >
               {[...Array(4)].map((_, i) => (
                 <RepoSkeleton key={i} />
               ))}
