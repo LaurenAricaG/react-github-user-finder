@@ -22,9 +22,7 @@ const RepoCard = ({ repo }) => {
                  hover:-translate-y-0.5
                  transition-all duration-300"
     >
-      {/* Header */}
       <div className="flex items-start justify-between gap-2 min-w-0">
-        {/* Repo name */}
         <div className="flex items-start gap-2 min-w-0">
           <VscRepo className="shrink-0 mt-0.75 text-[#1152D4]" />
 
@@ -38,7 +36,6 @@ const RepoCard = ({ repo }) => {
           </h4>
         </div>
 
-        {/* Visibility */}
         <span
           className="shrink-0 text-[10px] font-semibold uppercase tracking-wide
                px-2 py-0.5 rounded-full
@@ -49,14 +46,12 @@ const RepoCard = ({ repo }) => {
         </span>
       </div>
 
-      {/* Description */}
       {repo.description && (
         <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 line-clamp-3">
           {repo.description}
         </p>
       )}
 
-      {/* Topics */}
       {visibleTopics.length > 0 && (
         <ul className="flex flex-wrap gap-2 mt-3 mb-4">
           {visibleTopics.map((topic) => (
@@ -84,7 +79,6 @@ const RepoCard = ({ repo }) => {
 
       <div className="grow" />
 
-      {/* Footer */}
       <div className="pt-3 border-t border-slate-200 dark:border-slate-700">
         <div className="grid grid-cols-[max-content_auto] gap-y-2 gap-x-4 text-xs text-slate-500 dark:text-slate-400">
           <div className="flex items-center gap-4 whitespace-nowrap">

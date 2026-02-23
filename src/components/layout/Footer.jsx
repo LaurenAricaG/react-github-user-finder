@@ -10,17 +10,14 @@ const Footer = () => {
                text-center text-xs sm:text-sm md:text-base
                text-slate-500 dark:text-slate-400"
       >
-        {/* Texto */}
         <span className="leading-tight">
           Web minimalista utilizando API de GitHub
         </span>
 
-        {/* Separador */}
         <span className="hidden sm:inline-flex items-center text-slate-400 dark:text-slate-600">
           <BsDot />
         </span>
 
-        {/* Copyright */}
         <span className="inline-flex items-center gap-1 leading-tight">
           <BiCopyright className="text-[0.9em]" />
           {new Date().getFullYear()}
