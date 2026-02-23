@@ -17,7 +17,8 @@ const Header = ({ open, setOpen, layout, onChangeLayout }) => {
           <FaGear />
         </button>
         <a
-          href="#"
+          href="https://github.com/"
+          target="_blank"
           className="hidden sm:block text-sm font-medium hover:text-primary transition-colors text-slate-800 dark:text-slate-200"
         >
           Documentación

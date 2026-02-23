@@ -63,6 +63,12 @@ const Home = () => {
     localStorage.setItem("layout", layout);
   }, [layout]);
 
+  useEffect(() => {
+    document.title = username
+      ? `${username} · GitHub`
+      : "User Finder in GitHub";
+  }, [username]);
+
   return (
     <div className="flex flex-col min-h-screen bg-[#f6f6f8] dark:bg-[#0D1117] text-slate-800 dark:text-slate-200 transition-colors duration-300">
       <Header
