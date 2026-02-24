@@ -23,7 +23,7 @@ const Home = () => {
 
   const [open, setOpen] = useState(false);
 
-  // 🔥 LOADERS SEPARADOS
+  // LOADERS SEPARADOS
   const [loadingUser, setLoadingUser] = useState(false);
   const [loadingRepos, setLoadingRepos] = useState(false);
 
@@ -43,7 +43,7 @@ const Home = () => {
     if (userFromUrl) setUsername(userFromUrl);
   }, []);
 
-  // 1️⃣ FETCH USER (SOLO CUANDO CAMBIA USERNAME)
+  // FETCH USER (SOLO CUANDO CAMBIA USERNAME)
   useEffect(() => {
     if (!username.trim()) return;
 
@@ -59,7 +59,7 @@ const Home = () => {
         });
 
         setUser(data);
-        setPage(1); // reset paginación
+        setPage(1);
       } catch (err) {
         if (err.name !== "CanceledError") {
           setError(
@@ -79,7 +79,7 @@ const Home = () => {
     return () => controller.abort();
   }, [username]);
 
-  // 2️⃣ FETCH REPOS (CUANDO CAMBIA PAGE O USER)
+  // FETCH REPOS (CUANDO CAMBIA PAGE O USER)
   useEffect(() => {
     if (!user) return;
 
@@ -140,7 +140,6 @@ const Home = () => {
           />
         )}
 
-        {/* 🔥 PRIMERA CARGA: PERFIL + REPOS */}
         {loadingUser && (
           <section
             className={`w-full grid gap-6 ${
@@ -197,7 +196,6 @@ const Home = () => {
             <ProfileHeader user={user} layout={layout} />
 
             <div>
-              {/* 🔥 SOLO REPOS SE RECARGAN */}
               {loadingRepos ? (
                 <div
                   className={`grid gap-3 ${
@@ -214,7 +212,6 @@ const Home = () => {
                 <RepoList repos={repos} layout={layout} />
               )}
 
-              {/* PAGINACIÓN */}
               <div className="flex justify-center items-center gap-4 mt-6 text-slate-500 dark:text-slate-400">
                 <button
                   onClick={() => setPage((p) => Math.max(p - 1, 1))}
