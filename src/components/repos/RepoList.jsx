@@ -14,12 +14,9 @@ const RepoList = ({ repos }) => {
       </h2>
 
       <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(285px,1fr))]">
-        {repos
-          .slice()
-          .reverse()
-          .map((repo) => (
-            <RepoCard key={repo.id} repo={repo} />
-          ))}
+        {repos.map((repo) => (
+          <RepoCard key={repo.id} repo={repo} />
+        ))}
       </div>
     </div>
   );

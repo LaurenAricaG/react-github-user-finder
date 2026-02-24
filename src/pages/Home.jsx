@@ -49,9 +49,12 @@ const Home = () => {
         const { data: userdata } = await axios.get(URL + username, {
           signal: controller.signal,
         });
-        const { data: reposdata } = await axios.get(userdata.repos_url, {
-          signal: controller.signal,
-        });
+        const { data: reposdata } = await axios.get(
+          `${userdata.repos_url}?sort=updated&direction=desc`,
+          {
+            signal: controller.signal,
+          },
+        );
         setUser(userdata);
         setRepos(reposdata);
       } catch (err) {
