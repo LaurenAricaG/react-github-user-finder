@@ -1,4 +1,4 @@
-export const downloadImage = async (url, filename = "avatar.jpg") => {
+export const downloadImage = async (url, filename = "avatar") => {
   try {
     const response = await fetch(url);
     const blob = await response.blob();
