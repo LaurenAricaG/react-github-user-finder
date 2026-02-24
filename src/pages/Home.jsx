@@ -10,6 +10,10 @@ import RepoSkeleton from "../components/common/RepoSkeleton";
 
 const URL = "https://api.github.com/users/";
 
+const clearUrlParams = () => {
+  window.history.replaceState({}, "", window.location.pathname);
+};
+
 const Home = () => {
   const [layout, setLayout] = useState(() => {
     return localStorage.getItem("layout") || "horizontal";
@@ -23,6 +27,16 @@ const Home = () => {
   const [user, setUser] = useState(null);
   const [repos, setRepos] = useState([]);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const userFromUrl = params.get("user");
+
+    if (userFromUrl) {
+      setUsername(userFromUrl);
+    }
+  }, []);
+
+  // Otener los datos de la API de GITHUB
   useEffect(() => {
     if (!username.trim()) return;
 
@@ -59,10 +73,12 @@ const Home = () => {
     return () => controller.abort();
   }, [username]);
 
+  // Guardar la preferencia de layout horizontal || vertical
   useEffect(() => {
     localStorage.setItem("layout", layout);
   }, [layout]);
 
+  // Cambiar el title de la ventana del navegador
   useEffect(() => {
     document.title = username
       ? `${username} · GitHub`
@@ -125,6 +141,7 @@ const Home = () => {
             <div className="col-span-full mb-4">
               <button
                 onClick={() => {
+                  clearUrlParams();
                   setUser(null);
                   setRepos([]);
                   setUsername("");

@@ -1,6 +1,9 @@
 import { BsLink, BsTwitterX } from "react-icons/bs";
+import { FaDownload, FaShare } from "react-icons/fa";
 import { GrLocation } from "react-icons/gr";
 import { RiShareBoxLine } from "react-icons/ri";
+import { downloadImage } from "../../utils/downloadImage";
+import { shareProfile } from "../../utils/shareProfile";
 
 const ProfileHeader = ({ user, layout }) => {
   const isVertical = layout === "vertical";
@@ -12,11 +15,35 @@ const ProfileHeader = ({ user, layout }) => {
           isVertical ? "sm:flex-row sm:items-start sm:gap-8" : ""
         }`}
       >
-        <img
-          src={user?.avatar_url}
-          alt="avatar"
-          className="rounded-full h-24 w-24 shrink-0 ring-2 ring-slate-200 dark:ring-slate-800"
-        />
+        <div
+          className={`flex ${isVertical ? "flex-col items-center" : " items-center gap-3"}`}
+        >
+          <img
+            src={user?.avatar_url}
+            alt="avatar"
+            className="rounded-full h-24 w-24 shrink-0 ring-2 ring-slate-200 dark:ring-slate-800"
+          />
+          <div
+            className={`${isVertical ? "flex justify-center w-auto mt-2" : ""} border border-slate-300 dark:border-[#1E293B]  rounded-lg`}
+          >
+            <button
+              onClick={() =>
+                downloadImage(user.avatar_url, `${user.login}-avatar.jpg`)
+              }
+              title="Descargar imagen"
+              className={`${isVertical ? "border-r" : "border-b "} border-slate-300 dark:border-[#1E293B] p-2 text-xs cursor-pointer hover:text-[#1152D4] flex text-slate-500 dark:text-slate-400`}
+            >
+              <FaDownload />
+            </button>
+            <button
+              onClick={() => shareProfile(user)}
+              className="p-2 text-xs cursor-pointer hover:text-[#1152D4] flex text-slate-500 dark:text-slate-400"
+              title="Compartir perfil"
+            >
+              <FaShare />
+            </button>
+          </div>
+        </div>
 
         <div
           className={`flex-1 text-center ${isVertical ? "sm:text-left" : ""}`}
