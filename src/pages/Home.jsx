@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Footer from "../components/layout/Footer";
 import Header from "../components/layout/Header";
 import SearchBar from "../components/search/SearchBar";
@@ -20,6 +20,8 @@ const Home = () => {
   const [layout, setLayout] = useState(() => {
     return localStorage.getItem("layout") || "horizontal";
   });
+
+  const reposRef = useRef(null);
 
   const [open, setOpen] = useState(false);
 
@@ -195,7 +197,7 @@ const Home = () => {
             </div>
             <ProfileHeader user={user} layout={layout} />
 
-            <div>
+            <div ref={reposRef} className="w-full">
               {loadingRepos ? (
                 <div
                   className={`grid gap-3 ${
@@ -214,7 +216,13 @@ const Home = () => {
 
               <div className="flex justify-center items-center gap-4 mt-6 text-slate-500 dark:text-slate-400">
                 <button
-                  onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                  onClick={() => {
+                    setPage((p) => Math.max(p - 1, 1));
+                    reposRef.current?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
                   disabled={page === 1}
                   className="flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 dark:border-[#1E293B] 
                hover:bg-slate-100 dark:hover:bg-[#1E293B] hover:text-[#1152D4] transition-all duration-200 
@@ -226,7 +234,13 @@ const Home = () => {
                 <span className="text-xs font-medium px-2">{`Página ${page}`}</span>
 
                 <button
-                  onClick={() => setPage((p) => p + 1)}
+                  onClick={() => {
+                    setPage((p) => p + 1);
+                    reposRef.current?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
                   disabled={!hasMoreRepos}
                   className="flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 dark:border-[#1E293B] 
                hover:bg-slate-100 dark:hover:bg-[#1E293B] hover:text-[#1152D4] transition-all duration-200 
