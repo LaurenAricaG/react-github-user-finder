@@ -7,8 +7,10 @@ import RepoList from "../components/repos/RepoList";
 import axios from "axios";
 import ProfileSkeleton from "../components/common/ProfileSkeleton";
 import RepoSkeleton from "../components/common/RepoSkeleton";
+import { FiChevronLeft, FiChevronRight, FiChevronsLeft } from "react-icons/fi";
 
 const URL = "https://api.github.com/users/";
+const PER_PAGE = 12;
 
 const clearUrlParams = () => {
   window.history.replaceState({}, "", window.location.pathname);
@@ -20,43 +22,44 @@ const Home = () => {
   });
 
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+
+  // 🔥 LOADERS SEPARADOS
+  const [loadingUser, setLoadingUser] = useState(false);
+  const [loadingRepos, setLoadingRepos] = useState(false);
+
   const [error, setError] = useState(null);
 
   const [username, setUsername] = useState("");
   const [user, setUser] = useState(null);
   const [repos, setRepos] = useState([]);
 
+  // PAGINACIÓN API
+  const [page, setPage] = useState(1);
+  const [hasMoreRepos, setHasMoreRepos] = useState(true);
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const userFromUrl = params.get("user");
-
-    if (userFromUrl) {
-      setUsername(userFromUrl);
-    }
+    if (userFromUrl) setUsername(userFromUrl);
   }, []);
 
-  // Otener los datos de la API de GITHUB
+  // 1️⃣ FETCH USER (SOLO CUANDO CAMBIA USERNAME)
   useEffect(() => {
     if (!username.trim()) return;
 
     const controller = new AbortController();
 
-    const fetchUserAndRepos = async () => {
-      setLoading(true);
+    const fetchUser = async () => {
+      setLoadingUser(true);
       setError(null);
+
       try {
-        const { data: userdata } = await axios.get(URL + username, {
+        const { data } = await axios.get(URL + username, {
           signal: controller.signal,
         });
-        const { data: reposdata } = await axios.get(
-          `${userdata.repos_url}?sort=updated&direction=desc`,
-          {
-            signal: controller.signal,
-          },
-        );
-        setUser(userdata);
-        setRepos(reposdata);
+
+        setUser(data);
+        setPage(1); // reset paginación
       } catch (err) {
         if (err.name !== "CanceledError") {
           setError(
@@ -68,20 +71,48 @@ const Home = () => {
           setRepos([]);
         }
       } finally {
-        setTimeout(() => setLoading(false), 300);
+        setTimeout(() => setLoadingUser(false), 300);
       }
     };
 
-    fetchUserAndRepos();
+    fetchUser();
     return () => controller.abort();
   }, [username]);
 
-  // Guardar la preferencia de layout horizontal || vertical
+  // 2️⃣ FETCH REPOS (CUANDO CAMBIA PAGE O USER)
+  useEffect(() => {
+    if (!user) return;
+
+    const controller = new AbortController();
+
+    const fetchRepos = async () => {
+      setLoadingRepos(true);
+
+      try {
+        const { data } = await axios.get(
+          `${user.repos_url}?per_page=${PER_PAGE}&page=${page}&sort=updated&direction=desc`,
+          { signal: controller.signal },
+        );
+
+        setRepos(data);
+        setHasMoreRepos(data.length === PER_PAGE);
+      } catch (err) {
+        if (err.name !== "CanceledError") {
+          setRepos([]);
+        }
+      } finally {
+        setTimeout(() => setLoadingRepos(false), 300);
+      }
+    };
+
+    fetchRepos();
+    return () => controller.abort();
+  }, [user, page]);
+
   useEffect(() => {
     localStorage.setItem("layout", layout);
   }, [layout]);
 
-  // Cambiar el title de la ventana del navegador
   useEffect(() => {
     document.title = username
       ? `${username} · GitHub`
@@ -98,20 +129,29 @@ const Home = () => {
       />
 
       <main className="flex-1 flex flex-col items-center px-4 pt-8 pb-8 max-w-6xl mx-auto w-full">
-        {!user && <SearchBar onSearch={setUsername} />}
+        {!user && (
+          <SearchBar
+            onSearch={(value) => {
+              clearUrlParams();
+              setUsername(value);
+              setUser(null);
+              setRepos([]);
+            }}
+          />
+        )}
 
-        {loading && (
+        {/* 🔥 PRIMERA CARGA: PERFIL + REPOS */}
+        {loadingUser && (
           <section
-            className={`w-full grid gap-6 items-start transition-opacity duration-300 opacity-100 ${
+            className={`w-full grid gap-6 ${
               layout === "horizontal"
                 ? "md:grid-cols-[290px_1fr]"
                 : "md:grid-cols-1"
             }`}
           >
             <ProfileSkeleton />
-
             <div
-              className={`grid gap-3 grid-cols-1 ${
+              className={`grid gap-3 ${
                 layout === "horizontal" ? "sm:grid-cols-2" : "sm:grid-cols-3"
               }`}
             >
@@ -122,7 +162,7 @@ const Home = () => {
           </section>
         )}
 
-        {!loading && error && (
+        {!loadingUser && error && (
           <div className="w-full max-w-md rounded-xl border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-900/20 p-6 text-center">
             <p className="text-sm font-medium text-red-700 dark:text-red-300">
               ❌ {error}
@@ -133,9 +173,9 @@ const Home = () => {
           </div>
         )}
 
-        {!loading && user && (
+        {!loadingUser && user && (
           <section
-            className={`w-full grid gap-6 items-start transition-opacity duration-300 ${
+            className={`w-full grid gap-6 items-start ${
               layout === "horizontal"
                 ? "md:grid-cols-[290px_1fr]"
                 : "md:grid-cols-1"
@@ -154,9 +194,51 @@ const Home = () => {
                 Nueva búsqueda
               </button>
             </div>
-
             <ProfileHeader user={user} layout={layout} />
-            <RepoList repos={repos} layout={layout} />
+
+            <div>
+              {/* 🔥 SOLO REPOS SE RECARGAN */}
+              {loadingRepos ? (
+                <div
+                  className={`grid gap-3 ${
+                    layout === "horizontal"
+                      ? "sm:grid-cols-2"
+                      : "sm:grid-cols-3"
+                  }`}
+                >
+                  {[...Array(12)].map((_, i) => (
+                    <RepoSkeleton key={i} />
+                  ))}
+                </div>
+              ) : (
+                <RepoList repos={repos} layout={layout} />
+              )}
+
+              {/* PAGINACIÓN */}
+              <div className="flex justify-center items-center gap-4 mt-6 text-slate-500 dark:text-slate-400">
+                <button
+                  onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                  disabled={page === 1}
+                  className="flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 dark:border-[#1E293B] 
+               hover:bg-slate-100 dark:hover:bg-[#1E293B] hover:text-[#1152D4] transition-all duration-200 
+               disabled:opacity-50 disabled:cursor-not-allowed shadow-sm cursor-pointer"
+                >
+                  <FiChevronLeft className="text-lg" />
+                </button>
+
+                <span className="text-xs font-medium px-2">{`Página ${page}`}</span>
+
+                <button
+                  onClick={() => setPage((p) => p + 1)}
+                  disabled={!hasMoreRepos}
+                  className="flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 dark:border-[#1E293B] 
+               hover:bg-slate-100 dark:hover:bg-[#1E293B] hover:text-[#1152D4] transition-all duration-200 
+               disabled:opacity-50 disabled:cursor-not-allowed shadow-sm cursor-pointer"
+                >
+                  <FiChevronRight className="text-lg" />
+                </button>
+              </div>
+            </div>
           </section>
         )}
       </main>
