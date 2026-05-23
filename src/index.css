@@ -1,3 +1,19 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@layer utilities {
+  .hero-grid-bg {
+    background-image:
+      linear-gradient(to right, rgb(148 163 184 / 0.12) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(148 163 184 / 0.12) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 20%, transparent 75%);
+  }
+
+  :is(.dark, .dark *) .hero-grid-bg {
+    background-image:
+      linear-gradient(to right, rgb(148 163 184 / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(148 163 184 / 0.06) 1px, transparent 1px);
+  }
+}

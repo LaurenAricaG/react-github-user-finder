@@ -1,22 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import Footer from "../components/layout/Footer";
 import Header from "../components/layout/Header";
-import SearchBar from "../components/search/SearchBar";
 import ProfileHeader from "../components/profile/ProfileHeader";
 import RepoList from "../components/repos/RepoList";
 import axios from "axios";
 import ProfileSkeleton from "../components/common/ProfileSkeleton";
 import RepoSkeleton from "../components/common/RepoSkeleton";
-import { FiChevronLeft, FiChevronRight, FiChevronsLeft } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import HeroLanding from "../components/HeroLanding";
+import { useProfileUrl } from "../hooks/useProfileUrl";
 
 const URL = "https://api.github.com/users/";
 const PER_PAGE = 12;
 
-const clearUrlParams = () => {
-  window.history.replaceState({}, "", window.location.pathname);
-};
-
 const Home = () => {
+  const { username, isProfileRoute, openProfile, goHome } = useProfileUrl();
+
   const [layout, setLayout] = useState(() => {
     return localStorage.getItem("layout") || "horizontal";
   });
@@ -25,35 +24,48 @@ const Home = () => {
 
   const [open, setOpen] = useState(false);
 
-  // LOADERS SEPARADOS
   const [loadingUser, setLoadingUser] = useState(false);
   const [loadingRepos, setLoadingRepos] = useState(false);
 
   const [error, setError] = useState(null);
 
-  const [username, setUsername] = useState("");
   const [user, setUser] = useState(null);
   const [repos, setRepos] = useState([]);
 
-  // PAGINACIÓN API
   const [page, setPage] = useState(1);
   const [hasMoreRepos, setHasMoreRepos] = useState(true);
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const userFromUrl = params.get("user");
-    if (userFromUrl) setUsername(userFromUrl);
-  }, []);
+  const resetProfileState = () => {
+    setUser(null);
+    setRepos([]);
+    setError(null);
+    setPage(1);
+    setHasMoreRepos(true);
+  };
 
-  // FETCH USER (SOLO CUANDO CAMBIA USERNAME)
+  const handleGoHome = () => {
+    goHome();
+    resetProfileState();
+  };
+
+  const handleSearch = (value) => {
+    resetProfileState();
+    openProfile(value);
+  };
+
   useEffect(() => {
-    if (!username.trim()) return;
+    if (!username) {
+      resetProfileState();
+      return;
+    }
 
     const controller = new AbortController();
 
     const fetchUser = async () => {
       setLoadingUser(true);
       setError(null);
+      setUser(null);
+      setRepos([]);
 
       try {
         const { data } = await axios.get(URL + username, {
@@ -81,7 +93,6 @@ const Home = () => {
     return () => controller.abort();
   }, [username]);
 
-  // FETCH REPOS (CUANDO CAMBIA PAGE O USER)
   useEffect(() => {
     if (!user) return;
 
@@ -121,6 +132,12 @@ const Home = () => {
       : "User Finder in GitHub";
   }, [username]);
 
+  useEffect(() => {
+    if (isProfileRoute) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [username, isProfileRoute]);
+
   return (
     <div className="flex flex-col min-h-screen bg-[#f6f6f8] dark:bg-[#0D1117] text-slate-800 dark:text-slate-200 transition-colors duration-300">
       <Header
@@ -128,21 +145,15 @@ const Home = () => {
         setOpen={setOpen}
         layout={layout}
         onChangeLayout={setLayout}
+        onGoHome={handleGoHome}
       />
 
-      <main className="flex-1 flex flex-col items-center px-4 pt-8 pb-8 max-w-6xl mx-auto w-full">
-        {!user && (
-          <SearchBar
-            onSearch={(value) => {
-              clearUrlParams();
-              setUsername(value);
-              setUser(null);
-              setRepos([]);
-            }}
-          />
+      <main className="flex-1 flex flex-col items-center px-4 pt-4 sm:pt-6 pb-8 max-w-6xl mx-auto w-full">
+        {!isProfileRoute && (
+          <HeroLanding error={error} onSearch={handleSearch} />
         )}
 
-        {loadingUser && (
+        {isProfileRoute && loadingUser && (
           <section
             className={`w-full grid gap-6 ${
               layout === "horizontal"
@@ -163,18 +174,25 @@ const Home = () => {
           </section>
         )}
 
-        {!loadingUser && error && (
-          <div className="w-full max-w-md rounded-xl border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-900/20 p-6 text-center">
+        {isProfileRoute && !loadingUser && error && !user && (
+          <div className="w-full max-w-md mt-4 rounded-xl border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-900/20 p-6 text-center">
             <p className="text-sm font-medium text-red-700 dark:text-red-300">
-              ❌ {error}
+              {error}
             </p>
             <p className="mt-2 text-xs text-red-600 dark:text-red-400">
               Verifica el nombre de usuario e intenta nuevamente
             </p>
+            <button
+              type="button"
+              onClick={handleGoHome}
+              className="mt-5 px-4 py-2 bg-[#1152D4] text-white rounded-lg hover:bg-blue-700 transition cursor-pointer text-sm font-medium"
+            >
+              Volver al inicio
+            </button>
           </div>
         )}
 
-        {!loadingUser && user && (
+        {isProfileRoute && !loadingUser && user && (
           <section
             className={`w-full grid gap-6 items-start ${
               layout === "horizontal"
@@ -184,12 +202,8 @@ const Home = () => {
           >
             <div className="col-span-full mb-4">
               <button
-                onClick={() => {
-                  clearUrlParams();
-                  setUser(null);
-                  setRepos([]);
-                  setUsername("");
-                }}
+                type="button"
+                onClick={handleGoHome}
                 className="px-4 py-2 bg-teal-800 text-white rounded-lg hover:bg-teal-700 transition cursor-pointer"
               >
                 Nueva búsqueda
@@ -216,6 +230,7 @@ const Home = () => {
 
               <div className="flex justify-center items-center gap-4 mt-6 text-slate-500 dark:text-slate-400">
                 <button
+                  type="button"
                   onClick={() => {
                     setPage((p) => Math.max(p - 1, 1));
                     reposRef.current?.scrollIntoView({
@@ -234,6 +249,7 @@ const Home = () => {
                 <span className="text-xs font-medium px-2">{`Página ${page}`}</span>
 
                 <button
+                  type="button"
                   onClick={() => {
                     setPage((p) => p + 1);
                     reposRef.current?.scrollIntoView({

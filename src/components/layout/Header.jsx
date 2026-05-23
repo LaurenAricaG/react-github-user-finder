@@ -2,13 +2,22 @@ import { BiTerminal } from "react-icons/bi";
 import ConfigDrawer from "../common/ConfigDrawer";
 import { FaGear } from "react-icons/fa6";
 
-const Header = ({ open, setOpen, layout, onChangeLayout }) => {
+const Header = ({ open, setOpen, layout, onChangeLayout, onGoHome }) => {
   return (
     <header className="w-full px-6 py-3 md:px-16 flex justify-between items-center border-b border-slate-200 dark:border-slate-800 flex-wrap">
-      <div className="flex items-center gap-2 text-slate-800 dark:text-slate-200">
+      <a
+        href="/"
+        onClick={(e) => {
+          if (onGoHome) {
+            e.preventDefault();
+            onGoHome();
+          }
+        }}
+        className="flex items-center gap-2 text-slate-800 dark:text-slate-200 hover:opacity-80 transition-opacity"
+      >
         <BiTerminal className="text-[#1152D4] h-6 w-6" />
         <h1 className="text-lg font-semibold">GitSearch</h1>
-      </div>
+      </a>
       <div className="flex gap-5  items-center">
         <button
           onClick={() => setOpen(true)}
