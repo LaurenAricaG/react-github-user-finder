@@ -1,0 +1,17 @@
+{
+  "name": "GitSearch · GitHub User Finder",
+  "short_name": "GitSearch",
+  "description": "Explora perfiles y repositorios públicos de GitHub.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0D1117",
+  "theme_color": "#1152D4",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

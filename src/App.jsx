@@ -1,10 +1,19 @@
-import Home from "./pages/Home";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import AppLayout from "./layouts/AppLayout";
+import ProfilePage from "./pages/ProfilePage";
+import RootRoute from "./pages/RootRoute";
 
 function App() {
   return (
-    <div className=" min-h-screen bg-[#f6f6f8] dark:bg-[#0D1117] text-slate-800 dark:text-slate-200 transition-colors duration-300">
-      <Home />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<RootRoute />} />
+          <Route path="/user/:username" element={<ProfilePage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

@@ -1,14 +1,46 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaArrowRight, FaSearch } from "react-icons/fa";
 
-const SearchBar = ({ onSearch }) => {
-  const [value, setValue] = useState("");
+const SearchBar = ({ onSearch, compact = false, defaultValue = "" }) => {
+  const [value, setValue] = useState(defaultValue);
+
+  useEffect(() => {
+    setValue(defaultValue);
+  }, [defaultValue]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!value.trim()) return;
     onSearch(value.trim());
   };
+
+  if (compact) {
+    return (
+      <form onSubmit={handleSubmit} className="flex w-full gap-2">
+        <div className="relative flex-1 min-w-0">
+          <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-sm pointer-events-none" />
+          <input
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            type="text"
+            placeholder="Buscar usuario..."
+            autoComplete="off"
+            spellCheck={false}
+            aria-label="Buscar usuario de GitHub"
+            className="w-full h-9 pl-9 pr-3 rounded-lg bg-white dark:bg-[#161B22] border border-slate-200 dark:border-[#1E293B] text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-[#1152D4]/60 focus:ring-2 focus:ring-[#1152D4]/20 transition"
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={!value.trim()}
+          className="shrink-0 h-9 px-3 rounded-lg bg-[#1152D4] text-white text-xs font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+        >
+          <span className="hidden sm:inline">Buscar</span>
+          <FaArrowRight className="sm:hidden text-xs" />
+        </button>
+      </form>
+    );
+  }
 
   return (
     <div className="w-full max-w-xl mx-auto text-left sm:text-center">
