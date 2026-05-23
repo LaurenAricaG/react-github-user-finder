@@ -16,4 +16,59 @@
       linear-gradient(to right, rgb(148 163 184 / 0.06) 1px, transparent 1px),
       linear-gradient(to bottom, rgb(148 163 184 / 0.06) 1px, transparent 1px);
   }
+
+  @keyframes profile-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes profile-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .profile-enter {
+    animation: profile-fade-up 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .profile-enter-subtle {
+    animation: profile-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .profile-enter-delay-1 {
+    animation-delay: 0.07s;
+  }
+
+  .profile-enter-delay-2 {
+    animation-delay: 0.16s;
+  }
+
+  .profile-enter-delay-3 {
+    animation-delay: 0.26s;
+  }
+
+  .profile-repos-enter {
+    animation: profile-fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.1s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .profile-enter,
+    .profile-enter-subtle,
+    .profile-repos-enter {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
 }

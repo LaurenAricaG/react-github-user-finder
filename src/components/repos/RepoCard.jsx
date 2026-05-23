@@ -1,5 +1,5 @@
 import { VscRepo } from "react-icons/vsc";
-import { LANGUAGE_DOT_COLORS, MAX_TOPICS } from "../../constans/constants";
+import { LANGUAGE_DOT_COLORS, MAX_TOPICS } from "../../constants/constants";
 import { formatNumber, timeAgo } from "../../helpers/helpers";
 
 const RepoCard = ({ repo }) => {
