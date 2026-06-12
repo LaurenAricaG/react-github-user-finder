@@ -1,18 +1,24 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { REPOS_PER_PAGE } from "../constants/github";
+import { githubService } from "../../../services/githubService";
+import { REPOS_PER_PAGE } from "../../../constants/github";
 
 export const useGithubRepos = (reposUrl, page) => {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [prevReposUrl, setPrevReposUrl] = useState(reposUrl);
+  const [prevPage, setPrevPage] = useState(page);
+
+  // Resetear el estado en renderizado si cambian las dependencias para evitar cascading renders en useEffect
+  if (reposUrl !== prevReposUrl || page !== prevPage) {
+    setPrevReposUrl(reposUrl);
+    setPrevPage(page);
+    setRepos([]);
+    setHasMore(true);
+  }
 
   useEffect(() => {
-    if (!reposUrl) {
-      setRepos([]);
-      setHasMore(true);
-      return;
-    }
+    if (!reposUrl) return;
 
     const controller = new AbortController();
 
@@ -20,10 +26,7 @@ export const useGithubRepos = (reposUrl, page) => {
       setLoading(true);
 
       try {
-        const { data } = await axios.get(
-          `${reposUrl}?per_page=${REPOS_PER_PAGE}&page=${page}&sort=updated&direction=desc`,
-          { signal: controller.signal },
-        );
+        const data = await githubService.getRepos(reposUrl, page, controller.signal);
         setRepos(data);
         setHasMore(data.length === REPOS_PER_PAGE);
       } catch (err) {

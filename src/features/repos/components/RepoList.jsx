@@ -1,6 +1,6 @@
 import { GrProjects } from "react-icons/gr";
 import { VscRepo } from "react-icons/vsc";
-import EmptyState from "../common/EmptyState";
+import EmptyState from "../../../core/components/EmptyState";
 import RepoCard from "./RepoCard";
 
 const RepoList = ({ repos, page }) => {

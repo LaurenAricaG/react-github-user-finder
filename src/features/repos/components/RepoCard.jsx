@@ -1,6 +1,6 @@
 import { VscRepo } from "react-icons/vsc";
-import { LANGUAGE_DOT_COLORS, MAX_TOPICS } from "../../constants/constants";
-import { formatNumber, timeAgo } from "../../helpers/helpers";
+import { LANGUAGE_DOT_COLORS, MAX_TOPICS } from "../../../constants/constants";
+import { formatNumber, timeAgo } from "../../../helpers/helpers";
 
 const RepoCard = ({ repo }) => {
   const dotColor =
@@ -68,8 +68,8 @@ const RepoCard = ({ repo }) => {
           {remainingTopics > 0 && (
             <li
               className="text-[11px] font-medium px-2 py-1 rounded-full
-                           bg-slate-100 dark:bg-slate-700/70
-                           text-slate-500 dark:text-slate-400"
+                            bg-slate-100 dark:bg-slate-700/70
+                            text-slate-500 dark:text-slate-400"
             >
               +{remainingTopics} more
             </li>
