@@ -2,8 +2,8 @@ import { BsLink, BsTwitterX } from "react-icons/bs";
 import { FaDownload, FaShare } from "react-icons/fa";
 import { GrLocation } from "react-icons/gr";
 import { RiShareBoxLine } from "react-icons/ri";
-import { downloadImage } from "../../utils/downloadImage";
-import { shareProfile } from "../../utils/shareProfile";
+import { downloadImage } from "../../../utils/downloadImage";
+import { shareProfile } from "../../../utils/shareProfile";
 
 const EmptyHint = ({ children }) => (
   <span className="italic text-slate-400 dark:text-slate-500">{children}</span>

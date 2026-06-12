@@ -1,17 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   useNavigate,
   useOutletContext,
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import ProfileHeader from "../components/profile/ProfileHeader";
-import RepoList from "../components/repos/RepoList";
-import ProfileSkeleton from "../components/common/ProfileSkeleton";
-import RepoSkeleton from "../components/common/RepoSkeleton";
+import ProfileHeader from "../features/profile/components/ProfileHeader";
+import RepoList from "../features/repos/components/RepoList";
+import ProfileSkeleton from "../features/profile/components/ProfileSkeleton";
+import RepoSkeleton from "../features/repos/components/RepoSkeleton";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import { useGithubUser } from "../hooks/useGithubUser";
-import { useGithubRepos } from "../hooks/useGithubRepos";
+import { useGithubUser } from "../features/profile/hooks/useGithubUser";
+import { useGithubRepos } from "../features/repos/hooks/useGithubRepos";
 import { parsePage } from "../utils/profileUrl";
 
 const ProfilePage = () => {
@@ -23,42 +23,30 @@ const ProfilePage = () => {
   const { layout } = useOutletContext();
   const reposRef = useRef(null);
 
-  const [contentKey, setContentKey] = useState(username);
-  const [reposAnimKey, setReposAnimKey] = useState(`${username}-${page}`);
-
   const { user, loading: loadingUser, error } = useGithubUser(username);
-  const { repos, loading: loadingRepos, hasMore } = useGithubRepos(
-    user?.repos_url,
-    page,
-  );
+  const {
+    repos,
+    loading: loadingRepos,
+    hasMore,
+  } = useGithubRepos(user?.repos_url, page);
+
+  const contentKey = user ? username : "";
+  const reposAnimKey = loadingRepos ? "loading" : `${username}-${page}`;
 
   useEffect(() => {
     document.title = username
       ? `${username} · GitHub`
-      : "GitSearch · GitHub User Finder";
+      : "GitSearch - GitHub User Finder";
   }, [username]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [username]);
 
-  useEffect(() => {
-    if (!loadingUser && user) {
-      setContentKey(username);
-    }
-  }, [loadingUser, user, username]);
-
-  useEffect(() => {
-    if (!loadingRepos) {
-      setReposAnimKey(`${username}-${page}`);
-    }
-  }, [loadingRepos, username, page]);
-
   const handleGoHome = () => navigate("/");
 
   const handlePageChange = (updater) => {
-    const nextPage =
-      typeof updater === "function" ? updater(page) : updater;
+    const nextPage = typeof updater === "function" ? updater(page) : updater;
     const safePage = Math.max(1, nextPage);
 
     if (safePage > 1) {
@@ -74,9 +62,7 @@ const ProfilePage = () => {
   };
 
   const showPagination =
-    user &&
-    !loadingRepos &&
-    (page > 1 || hasMore || repos.length > 0);
+    user && !loadingRepos && (page > 1 || hasMore || repos.length > 0);
 
   if (loadingUser) {
     return (
@@ -127,9 +113,7 @@ const ProfilePage = () => {
     <section
       key={contentKey}
       className={`w-full grid gap-6 items-start ${
-        layout === "horizontal"
-          ? "md:grid-cols-[290px_1fr]"
-          : "md:grid-cols-1"
+        layout === "horizontal" ? "md:grid-cols-[290px_1fr]" : "md:grid-cols-1"
       }`}
     >
       <nav
@@ -167,9 +151,7 @@ const ProfilePage = () => {
         {loadingRepos ? (
           <div
             className={`grid gap-3 ${
-              layout === "horizontal"
-                ? "sm:grid-cols-2"
-                : "sm:grid-cols-3"
+              layout === "horizontal" ? "sm:grid-cols-2" : "sm:grid-cols-3"
             }`}
           >
             {[...Array(12)].map((_, i) => (

@@ -7,7 +7,7 @@ import {
 } from "react-icons/fa";
 import { HiOutlineUserGroup } from "react-icons/hi";
 import { VscRepo } from "react-icons/vsc";
-import SearchBar from "../SearchBar";
+import SearchBar from "./SearchBar";
 
 const QUICK_USERS = [
   { login: "octocat", label: "Octocat" },

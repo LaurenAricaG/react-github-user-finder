@@ -1,5 +1,5 @@
 import { FaMoon, FaSun, FaTimes, FaPalette, FaDesktop } from "react-icons/fa";
-import { useTheme } from "../../hooks/useTheme";
+import { useTheme } from "../hooks/useTheme";
 import { VscSplitHorizontal, VscSplitVertical } from "react-icons/vsc";
 
 const ConfigDrawer = ({ isOpen, onClose, layout, onChangeLayout }) => {

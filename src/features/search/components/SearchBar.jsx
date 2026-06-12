@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaArrowRight, FaSearch } from "react-icons/fa";
 
 const SearchBar = ({ onSearch, compact = false, defaultValue = "" }) => {
   const [value, setValue] = useState(defaultValue);
+  const [prevDefaultValue, setPrevDefaultValue] = useState(defaultValue);
 
-  useEffect(() => {
+  // Sincronizar el estado value durante el renderizado si cambia defaultValue (para evitar set-state-in-effect)
+  if (defaultValue !== prevDefaultValue) {
+    setPrevDefaultValue(defaultValue);
     setValue(defaultValue);
-  }, [defaultValue]);
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -54,7 +57,7 @@ const SearchBar = ({ onSearch, compact = false, defaultValue = "" }) => {
             value={value}
             onChange={(e) => setValue(e.target.value)}
             type="text"
-            placeholder="Ej: laurenaricag"
+            placeholder="Ej: github"
             autoComplete="off"
             spellCheck={false}
             className="w-full h-12 pl-11 pr-4 sm:pr-32 rounded-xl sm:rounded-r-none bg-white dark:bg-[#161B22] border border-slate-200 dark:border-[#1E293B] text-sm sm:text-base text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 shadow-sm focus:outline-none focus:border-[#1152D4]/60 focus:ring-2 focus:ring-[#1152D4]/20 transition"

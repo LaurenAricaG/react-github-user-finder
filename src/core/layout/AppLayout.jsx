@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import Footer from "../components/layout/Footer";
-import Header from "../components/layout/Header";
-import { buildProfilePath } from "../utils/profileUrl";
-import { setDefaultMeta } from "../utils/metaTags";
+import Footer from "./Footer";
+import Header from "./Header";
+import { buildProfilePath } from "../../utils/profileUrl";
+import { setDefaultMeta } from "../../utils/metaTags";
 
 const AppLayout = () => {
   const navigate = useNavigate();

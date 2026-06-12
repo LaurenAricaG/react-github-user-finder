@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { BiTerminal } from "react-icons/bi";
-import ConfigDrawer from "../common/ConfigDrawer";
+import ConfigDrawer from "../../features/theme/components/ConfigDrawer";
 import { FaGear } from "react-icons/fa6";
-import SearchBar from "../SearchBar";
+import SearchBar from "../../features/search/components/SearchBar";
 
 const Header = ({
   open,
@@ -27,7 +27,7 @@ const Header = ({
         </Link>
 
         {isProfileRoute && onSearch && (
-          <div className="order-3 w-full md:order-none md:flex-1 md:max-w-md md:mx-auto">
+          <div className="order-3 w-full md:order-0 md:flex-1 md:max-w-md md:mx-auto">
             <SearchBar
               compact
               defaultValue={currentUsername}
@@ -36,24 +36,14 @@ const Header = ({
           </div>
         )}
 
-        <div className="ml-auto flex shrink-0 items-center gap-3 md:gap-5">
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            className="hover:bg-slate-200 dark:hover:bg-slate-800 p-2 rounded-md cursor-pointer transition-colors text-gray-500 dark:text-gray-400"
-            aria-label="Abrir configuración"
-          >
-            <FaGear />
-          </button>
-          <a
-            href="https://docs.github.com/en/rest"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden sm:block text-sm font-medium hover:text-[#1152D4] transition-colors text-slate-800 dark:text-slate-200"
-          >
-            Documentación
-          </a>
-        </div>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="hover:bg-slate-200 dark:hover:bg-slate-800 p-2 rounded-md cursor-pointer transition-colors text-gray-500 dark:text-gray-400 inline-flex ml-auto md:ml-0"
+          aria-label="Abrir configuración"
+        >
+          <FaGear />
+        </button>
       </div>
 
       <ConfigDrawer
