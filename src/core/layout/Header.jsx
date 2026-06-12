@@ -16,7 +16,7 @@ const Header = ({
 }) => {
   return (
     <header className="w-full px-4 py-3 md:px-16 border-b border-slate-200 dark:border-slate-800">
-      <div className="flex flex-wrap items-center gap-3 md:gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 md:gap-4">
         <Link
           to="/"
           onClick={onGoHome}

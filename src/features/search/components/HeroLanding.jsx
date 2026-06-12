@@ -162,7 +162,7 @@ const HeroLanding = ({ onSearch, error }) => {
 
       <p className="mt-10 flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500">
         <FaSearch className="shrink-0" />
-        Datos en tiempo real · Sin registro · 100% frontend
+        Datos en tiempo real · Sin registro
       </p>
     </section>
   );
