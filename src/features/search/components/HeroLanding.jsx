@@ -4,6 +4,7 @@ import {
   FaSearch,
   FaShareAlt,
   FaCodeBranch,
+  FaChevronDown,
 } from "react-icons/fa";
 import { HiOutlineUserGroup } from "react-icons/hi";
 import { VscRepo } from "react-icons/vsc";
@@ -63,13 +64,17 @@ const HeroLanding = ({ onSearch, error }) => {
         <div className="absolute bottom-0 -left-16 h-48 w-48 rounded-full bg-slate-400/10 blur-3xl dark:bg-slate-600/10" />
       </div>
 
-      <div className="w-full max-w-3xl mx-auto text-center pt-4 sm:pt-10 pb-6">
+      <div className="relative w-full max-w-3xl mx-auto text-center px-4 sm:px-0 flex flex-col items-center min-h-[calc(100vh-220px)] sm:min-h-[calc(100vh-80px)]">
+        {/* Spacer superior */}
+        <div className="flex-1 sm:flex-[1.2]" />
+
+        {/* Contenido */}
         <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-[#161B22]/80 px-3 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 shadow-sm backdrop-blur-sm">
           <FaGithub className="text-[#1152D4]" />
           Conectado a la API de GitHub
         </span>
 
-        <h1 className="mt-6 text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-slate-800 dark:text-slate-100 leading-[1.15]">
+        <h1 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-slate-800 dark:text-slate-100 leading-[1.15]">
           Encuentra perfiles de{" "}
           <span className="text-[#1152D4]">desarrolladores</span> en segundos
         </h1>
@@ -80,14 +85,14 @@ const HeroLanding = ({ onSearch, error }) => {
           proyecto.
         </p>
 
-        <div className="mt-8">
+        <div className="mt-8 w-full">
           <SearchBar onSearch={onSearch} />
         </div>
 
         {error && (
           <div
             role="alert"
-            className="mt-5 mx-auto max-w-md rounded-xl border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-900/20 p-4 text-left sm:text-center"
+            className="mt-5 w-full max-w-md rounded-xl border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-900/20 p-4 text-left sm:text-center"
           >
             <p className="text-sm font-medium text-red-700 dark:text-red-300">
               {error}
@@ -112,6 +117,17 @@ const HeroLanding = ({ onSearch, error }) => {
               {label}
             </button>
           ))}
+        </div>
+
+        {/* Spacer inferior */}
+        <div className="flex-1 sm:flex-[1.2]" />
+
+        {/* Indicador de scroll */}
+        <div className="pb-5 hidden sm:flex flex-col items-center gap-0.5 text-slate-400 dark:text-slate-500 animate-bounce pointer-events-none">
+          <span className="text-[10px] uppercase tracking-wider font-semibold opacity-70">
+            Explora más abajo
+          </span>
+          <FaChevronDown className="text-xs" />
         </div>
       </div>
 
@@ -149,9 +165,7 @@ const HeroLanding = ({ onSearch, error }) => {
               key={step}
               className="flex flex-col items-center text-center sm:items-start sm:text-left gap-2"
             >
-              <span className="text-2xl font-bold text-[#1152D4]/30 dark:text-[#1152D4]/50">
-                {step}
-              </span>
+              <span className="text-2xl font-bold text-[#1152D4]">{step}</span>
               <span className="text-sm text-slate-600 dark:text-slate-400">
                 {text}
               </span>
